@@ -13,13 +13,13 @@ from ray.util.sgd.torch import TorchTrainer, TrainingOperator
 from ray.util.sgd.utils import override
 
 sys.path.insert(1, '/root/volume/Paper/MLVC_Internship/models')
-from models import *
+from models.inceptionv4 import Inception4
 
 class CIFAR10Module(TrainingOperator):
     @override(TrainingOperator)
     def setup(self, args):
         # Create model
-        model = ResNet18()
+        model = Inception4()
 
         # Create optimizer
         optimizer = torch.optim.SGD(

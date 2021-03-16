@@ -35,6 +35,10 @@ def main(args):
     val_loss = []
     val_acc = []
 
+    path = os.path.join("/root/volume/Paper/MLVC_Internship", args.checkpoint_dir, args.model_name+"_"+str(args.trial))
+    if not os.path.exists(path):
+        os.mkdir(path)
+
     from tabulate import tabulate
     pbar = trange(args.max_epochs, unit="epoch")
     for it in pbar:
@@ -44,9 +48,9 @@ def main(args):
         val_loss.append(val_stats["val_loss"])
         pbar.set_postfix(dict(acc=val_stats["val_accuracy"]))
 
-        trainer.save("./checkpoint/{}_{}/epoch_{}.ray".format(args.model_name, args.trial, it))
-        torch.save([train_loss, val_loss],"./checkpoint/{}_{}/epoch_{}.loss".format(args.model_name, args.trial, it))
-        torch.save([val_acc],"./checkpoint/{}_{}/epoch_{}.acc".format(args.model_name, args.trial, it))
+        trainer.save("/root/volume/Paper/MLVC_Internship/checkpoint/{}_{}/epoch_{}.ray".format(args.model_name, args.trial, it))
+        torch.save([train_loss, val_loss],"/root/volume/Paper/MLVC_Internship/checkpoint/{}_{}/epoch_{}.loss".format(args.model_name, args.trial, it))
+        torch.save([val_acc],"/root/volume/Paper/MLVC_Internship/checkpoint/{}_{}/epoch_{}.acc".format(args.model_name, args.trial, it))
 
     print(val_stats)
     trainer.shutdown()
@@ -64,7 +68,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--checkpoint_dir",
         type=str,
-        default="./checkpoint"
+        default="checkpoint"
     )
     parser.add_argument(
         "--use-gpu",
@@ -102,4 +106,5 @@ if __name__ == "__main__":
     parser.add_argument("--trial", type=int, default=1)
 
     args = parser.parse_args()
+    torch.cuda.empty_cache()
     main(args)
