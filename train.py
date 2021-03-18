@@ -20,7 +20,10 @@ def main(args):
         num_workers=args.num_workers,
         config={
             "lr" : args.learning_rate,
+            "lr_decay" : args.lr_decay,
+            "eps" : args.eps,
             "momentum" : args.momentum,
+            "wd" : args.wd,
             "data_dir" : args.data_dir,
             "batch_size" : args.batch_size,
             "num_workers" : args.num_workers,
@@ -68,7 +71,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--checkpoint_dir",
         type=str,
-        default="checkpoint"
+        default="/root/volume/Paper/MLVC_Internship/checkpoint"
     )
     parser.add_argument(
         "--use-gpu",
@@ -99,8 +102,11 @@ if __name__ == "__main__":
     parser.add_argument("--num_workers", type=int, default=1)
     parser.add_argument("--gpu_id", type=str, default="0")
 
-    parser.add_argument("--learning_rate", type=float, default=1e-2)
+    parser.add_argument("--learning_rate", type=float, default=0.045)
+    parser.add_argument("--lr_decay", type=float, default=0.94)
+    parser.add_argument("--eps", type=float, default=1.0)
     parser.add_argument("--momentum", type=float, default=0.9)
+    parser.add_argument("--wd", type=float, default=0.9)
 
     parser.add_argument("--model_name", required=True, type=str)
     parser.add_argument("--trial", type=int, default=1)

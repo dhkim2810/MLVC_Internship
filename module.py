@@ -9,23 +9,23 @@ from torchvision.datasets import CIFAR10
 import torchvision.transforms as transforms
 
 import ray
-from ray.util.sgd.torch import TorchTrainer, TrainingOperator
+from ray.util.sgd.torch import TrainingOperator
 from ray.util.sgd.utils import override
 
 sys.path.insert(1, '/root/volume/Paper/MLVC_Internship/models')
-from models.inceptionv4 import Inception4
+from models.incep_resnet import IncepResNetV2
 
 class CIFAR10Module(TrainingOperator):
     @override(TrainingOperator)
     def setup(self, args):
         # Create model
-        model = Inception4()
+        model = IncepResNetV2()
 
         # Create optimizer
-        optimizer = torch.optim.SGD(
+        optimizer = torch.optim.RMSprop(
             model.parameters(),
             lr=args["lr"],
-            momentum=args["momentum"])
+            weight_decay=args["wd"])
 
         # Load in training and validation data
         transform_train = transforms.Compose([
@@ -56,14 +56,18 @@ class CIFAR10Module(TrainingOperator):
             validation_dataset = Subset(validation_dataset, list(range(64)))
 
         train_loader = DataLoader(
-            train_dataset, batch_size=args["batch_size"], num_workers=args["num_workers"])
+            train_dataset, batch_size=args["batch_size"], num_workers=args["num_workers"], shuffle=True)
         validation_loader = DataLoader(
             validation_dataset, batch_size=args["batch_size"], num_workers=args["num_workers"])
 
         # Create scheduler
+        """
         scheduler = torch.optim.lr_scheduler.MultiStepLR(
             optimizer, milestones=[150, 250, 350], gamma=0.1)
-
+        """
+        scheduler = torch.optim.lr_scheduler.ExponentialLR(
+            optimizer, gamma=args["lr_decay"])
+        
         # Create loss
         criterion = nn.CrossEntropyLoss()
 
