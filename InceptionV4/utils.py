@@ -10,6 +10,11 @@ import torch.nn.functional as F
 def train(train_loader, model, criterion, optimizer, epoch, args):
     print('Epoch {}/{}'.format(epoch + 1, args.max_epochs))
     print('-' * 10)
+
+    # Device
+    device = "cpu"
+    if args.use_gpu and torch.cuda.is_available():
+        device = "cuda"
     
     start_time = time.time()
 
@@ -53,7 +58,11 @@ def load_checkpoint(args):
 
 
 def validate(val_loader, model, criterion, epoch, args, best_acc):
-
+    # Device
+    device = "cpu"
+    if args.use_gpu and torch.cuda.is_available():
+        device = "cuda"
+        
     model.eval()
 
     val_loss = 0
@@ -84,5 +93,5 @@ def validate(val_loader, model, criterion, epoch, args, best_acc):
         best_acc = acc
         print('Saving model..')
         path = os.path.join(args.base_dir, args.checkpoint_dir, "{}_{}".format(args.model_name, args.trial))
-        torch.save(model.state_dict(), path+"/Best_model_"+str(epoch)+".pth)
+        torch.save(model.state_dict(), path+"/Best_model_"+str(epoch)+".pth")
     return {"val_loss" : (val_loss/len(val_loader)),"val_acc" : acc,"best_acc" : best_acc}

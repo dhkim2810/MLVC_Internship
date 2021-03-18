@@ -36,8 +36,8 @@ def main(args):
 
     # Dataloader
     data = CIFAR10Data(args)
-    train_loader = data.train_loader()
-    val_loader = data.val_loader()
+    train_loader = data.train_dataloader()
+    val_loader = data.val_dataloader()
 
     # Create Loss
     criterion = nn.CrossEntropyLoss()

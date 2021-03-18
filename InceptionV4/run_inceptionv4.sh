@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 python /root/volume/Paper/MLVC_Internship/InceptionV4/train.py \
 --use_gpu \
 --model_name InceptionV4 --trial 1 \

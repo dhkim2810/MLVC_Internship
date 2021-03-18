@@ -1,8 +1,4 @@
 import os
-import zipfile
-
-import pytorch_lightning as pl
-import requests
 from torch.utils.data import DataLoader
 from torchvision import transforms as T
 from torchvision.datasets import CIFAR10
